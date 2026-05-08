@@ -37,7 +37,7 @@ async function saveClick() {
 saveClick().then(() => {
   setTimeout(() => {
     const message = `Hi, I found you through ${ref}`;
-window.location.href = `https://wa.me/254712345678?text=${encodeURIComponent(message)}`;
+window.location.href = `https://wa.me/254701266490?text=${encodeURIComponent(message)}`;
   }, 1500);
 });
 
