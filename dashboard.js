@@ -98,7 +98,7 @@ influencers.sort((a, b) => b.count - a.count);
 
 // Display
 influencers.forEach((data) => {
-  const link = `http://localhost:5500/?ref=${data.ref}`;
+  const link = `https://tracking-referral-app.vercel.app/?ref=${data.ref}`;
 
   const li = document.createElement("li");
   li.innerHTML = `

@@ -36,7 +36,8 @@ async function saveClick() {
 // Run then redirect
 saveClick().then(() => {
   setTimeout(() => {
-    const message = `Hi, I found you through ${ref}`;
+    const safeRef = ref || "your page";
+const message = `Hi, I found you through ${safeRef}`;
 window.location.href = `https://wa.me/254701266490?text=${encodeURIComponent(message)}`;
   }, 1500);
 });
