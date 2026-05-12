@@ -38,7 +38,7 @@ saveClick().then(() => {
   setTimeout(() => {
     const safeRef = ref || "your page";
 const message = `Hi, I found you through ${safeRef}`;
-window.location.href = `https://wa.me/254701266490?text=${encodeURIComponent(message)}`;
+window.location.href = `https://wa.me/254118043671?text=${encodeURIComponent(message)}`;
   }, 1500);
 });
 
