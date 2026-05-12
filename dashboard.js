@@ -1,5 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // Your config
 const firebaseConfig = {
@@ -13,7 +15,19 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
 
+async function login() {
+  try {
+    await signInWithPopup(auth, provider);
+    console.log("Logged in");
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+login();
 // Add influencer
 window.addInfluencer = async function () {
   const input = document.getElementById("name");
