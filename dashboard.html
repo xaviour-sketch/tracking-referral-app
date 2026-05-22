@@ -1,84 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>Dashboard</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      padding: 20px;
-    }
 
-    h1 {
-      text-align: center;
-    }
+  <meta charset="UTF-8" />
 
-    .box {
-      background: #1e293b;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
-    input {
-      padding: 10px;
-      width: 60%;
-      border-radius: 5px;
-      border: none;
-    }
+  <title>Influencer Tracking Dashboard</title>
 
-    button {
-      padding: 10px 15px;
-      background: #22c55e;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      cursor: pointer;
-    }
+  <link rel="stylesheet" href="style.css" />
 
-    li {
-      margin-bottom: 15px;
-      background: #334155;
-      padding: 10px;
-      border-radius: 5px;
-    }
-
-    a {
-      color: #38bdf8;
-    }
-  </style>
 </head>
+
 <body>
 
-  <h1>📊 Influencer Dashboard</h1>
+  <div class="container">
 
+    <!-- LOGO -->
+    <div class="logo-box">
 
-  <div class="box">
-  <h3>Overview</h3>
-  <p>Total Clicks: <span id="totalClicks">0</span></p>
-  <p>Total Influencers: <span id="totalInfluencers">0</span></p>
-</div>
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/3536/3536445.png"
+        class="logo"
+      />
 
-  <div class="box">
-    <h3>Add Influencer</h3>
-    <input type="text" id="name" placeholder="Enter influencer name">
+    </div>
 
-    <input
-      type="text"
-      id="phone"
-      placeholder="Enter WhatsApp number e.g 254712345678"
-      style="margin-top:10px;"
-    >
-    <button onclick="addInfluencer()">Add</button>
-  </div>
+    <h1>
+      Influencer Dashboard
+    </h1>
 
-  <div class="box">
-    <h3>Influencers</h3>
+    <!-- STATS -->
+    <div class="stats-container">
+
+      <div class="stats-card">
+
+        <h2>Total Clicks</h2>
+
+        <p id="totalClicks">0</p>
+
+      </div>
+
+      <div class="stats-card">
+
+        <h2>Total Influencers</h2>
+
+        <p id="totalInfluencers">0</p>
+
+      </div>
+
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+
+      <input
+        type="text"
+        id="search"
+        placeholder="Search influencer..."
+      />
+
+    </div>
+
+    <!-- FORM -->
+    <div class="form-card">
+
+      <input
+        type="text"
+        id="name"
+        placeholder="Influencer name"
+      />
+
+      <input
+        type="text"
+        id="phone"
+        placeholder="WhatsApp number e.g 254712345678"
+      />
+
+      <button onclick="addInfluencer()">
+        Add Influencer
+      </button>
+
+    </div>
+
+    <!-- LIST -->
     <ul id="list"></ul>
+
   </div>
 
   <script type="module" src="dashboard.js"></script>
 
 </body>
+
 </html>

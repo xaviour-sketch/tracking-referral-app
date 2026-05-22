@@ -1,13 +1,182 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
 body {
-  font-family: Arial;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: #0f172a;
+  background: #111827;
   color: white;
+  min-height: 100vh;
+  padding: 40px 20px;
 }
 
 .container {
+  max-width: 950px;
+  margin: auto;
+}
+
+.logo-box {
   text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 90px;
+  height: 90px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 42px;
+}
+
+.stats-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.stats-card {
+  flex: 1;
+  background: #1f2937;
+  padding: 35px;
+  border-radius: 18px;
+  text-align: center;
+}
+
+.stats-card h2 {
+  margin-bottom: 15px;
+  color: #9ca3af;
+}
+
+.stats-card p {
+  font-size: 60px;
+  font-weight: bold;
+  color: #22c55e;
+}
+
+.search-box {
+  margin-bottom: 20px;
+}
+
+.form-card {
+  background: #1f2937;
+  padding: 25px;
+  border-radius: 18px;
+  margin-bottom: 30px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+button {
+  padding: 14px 18px;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.form-card button {
+  width: 100%;
+  background: #22c55e;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  background: #1f2937;
+  padding: 25px;
+  border-radius: 18px;
+  margin-bottom: 20px;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.name {
+  font-size: 26px;
+}
+
+.clicks {
+  color: #22c55e;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+li a {
+  color: #60a5fa;
+  word-break: break-all;
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+}
+
+.copy-btn {
+  flex: 1;
+  background: #2563eb;
+}
+
+.delete-btn {
+  flex: 1;
+  background: red;
+}
+
+.redirect-box {
+  max-width: 500px;
+  margin: 100px auto;
+  background: #1f2937;
+  padding: 40px;
+  border-radius: 18px;
+  text-align: center;
+}
+
+.redirect-logo {
+  width: 90px;
+  margin-bottom: 20px;
+}
+
+.redirect-box p {
+  margin-top: 20px;
+  color: #d1d5db;
+}
+
+@media (max-width: 700px) {
+
+  .stats-card p {
+    font-size: 40px;
+  }
+
+  .top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .btn-row {
+    flex-direction: column;
+  }
 }

@@ -1,59 +1,145 @@
-// Import Firebase from CDN (IMPORTANT)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-// Your Firebase config (PUT YOUR REAL API KEY BACK)
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+// FIREBASE CONFIG
 const firebaseConfig = {
+
   apiKey: "AIzaSyA1GjZD0_BMnDKllhY0zDAeRA53AhQh8lM",
-  authDomain: "tracking-system-32753.firebaseapp.com",
-  projectId: "tracking-system-32753",
-  storageBucket: "tracking-system-32753.firebasestorage.app",
-  messagingSenderId: "250991296722",
-  appId: "1:250991296722:web:7b5f743a9ea55717102d0b"
+
+  authDomain:
+    "tracking-system-32753.firebaseapp.com",
+
+  projectId:
+    "tracking-system-32753",
+
+  storageBucket:
+    "tracking-system-32753.firebasestorage.app",
+
+  messagingSenderId:
+    "250991296722",
+
+  appId:
+    "1:250991296722:web:7b5f743a9ea55717102d0b"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
-// Get referral from URL
-const params = new URLSearchParams(window.location.search);
-const ref = params.get("ref");
+// INITIALIZE
+const app =
+  initializeApp(firebaseConfig);
 
-// Save click to Firestore
-async function saveClick() {
-  try {
-    await addDoc(collection(db, "clicks"), {
-      ref: ref || "unknown",
-      timestamp: new Date()
-    });
-    console.log("Click saved!");
-  } catch (error) {
-    console.error("Error:", error);
+const db =
+  getFirestore(app);
+
+
+// GET REF
+const params =
+  new URLSearchParams(
+    window.location.search
+  );
+
+const ref =
+  params.get("ref");
+
+
+// TRACK CLICK
+async function trackClick() {
+
+  if (!ref) {
+
+    window.location.href =
+      "https://yourwebsite.com";
+
+    return;
   }
-}
 
-// Run then redirect
-if (!localStorage.getItem("clicked")) {
-  saveClick().then(() => {
-    localStorage.setItem("clicked", "true");
+  // CHECK VALID REF
+  const influencerSnap =
+    await getDocs(
+      collection(db, "influencers")
+    );
 
-    setTimeout(() => {
-      const safeRef = ref || "your page";
-      const message = `Hi, I found you through ${safeRef}`;
-      window.location.href = `https://wa.me/254701266490?text=${encodeURIComponent(message)}`;
-    }, 1500);
-  });
-} else {
+  let validRef = false;
+
+  influencerSnap.forEach(
+    (docSnap) => {
+
+      const data =
+        docSnap.data();
+
+      if (data.ref === ref) {
+
+        validRef = true;
+      }
+    }
+  );
+
+  // INVALID LINK
+  if (!validRef) {
+
+    alert(
+      "Invalid or expired referral link"
+    );
+
+    window.location.href =
+      "https://yourwebsite.com";
+
+    return;
+  }
+
+  // ANTI SPAM
+  const clickKey =
+    `clicked_${ref}`;
+
+  if (
+    !localStorage.getItem(clickKey)
+  ) {
+
+    try {
+
+      await addDoc(
+        collection(db, "clicks"),
+        {
+
+          ref,
+
+          clickedAt:
+            new Date(),
+
+          userAgent:
+            navigator.userAgent
+        }
+      );
+
+      localStorage.setItem(
+        clickKey,
+        "true"
+      );
+
+    } catch (error) {
+
+      console.error(error);
+    }
+  }
+
+  // REDIRECT
   setTimeout(() => {
-    const safeRef = ref || "your page";
-    const message = `Hi, I found you through ${safeRef}`;
-    window.location.href = `https://wa.me/254118043671?text=${encodeURIComponent(message)}`;
+
+    const message =
+      `Hi, I found you through ${ref}`;
+
+    window.location.href =
+      `https://wa.me/254701266490?text=${encodeURIComponent(message)}`;
+
   }, 1500);
 }
 
-
-
-
-
-
+trackClick();

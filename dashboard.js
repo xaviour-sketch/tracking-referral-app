@@ -1,4 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
   getFirestore,
@@ -8,35 +9,52 @@ import {
   deleteDoc,
   doc,
   onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
   signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 // FIREBASE CONFIG
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_BUCKET",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+
+  apiKey: "AIzaSyA1GjZD0_BMnDKllhY0zDAeRA53AhQh8lM",
+
+  authDomain:
+    "tracking-system-32753.firebaseapp.com",
+
+  projectId:
+    "tracking-system-32753",
+
+  storageBucket:
+    "tracking-system-32753.firebasestorage.app",
+
+  messagingSenderId:
+    "250991296722",
+
+  appId:
+    "1:250991296722:web:7b5f743a9ea55717102d0b"
 };
 
 
 // INITIALIZE
-const app = initializeApp(firebaseConfig);
+const app =
+  initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
+const db =
+  getFirestore(app);
 
-const auth = getAuth();
+const auth =
+  getAuth();
 
-const provider = new GoogleAuthProvider();
+const provider =
+  new GoogleAuthProvider();
 
 
 // LOGIN
@@ -44,32 +62,41 @@ async function login() {
 
   try {
 
-    const result = await signInWithPopup(auth, provider);
+    const result =
+      await signInWithPopup(
+        auth,
+        provider
+      );
+
+    const email =
+      result.user.email;
 
     const allowedEmails = [
-      "yourcompany@gmail.com"
+      "xaviourmuthee24@gmail.com"
     ];
 
-    const email = result.user.email;
+    if (
+      !allowedEmails.includes(email)
+    ) {
 
-    if (!allowedEmails.includes(email)) {
-
-      alert("Unauthorized access");
+      alert("Unauthorized");
 
       await signOut(auth);
-
-      window.location.href = "/";
 
       return;
     }
 
-    console.log("Authorized Login");
+    console.log(
+      "Authorized login"
+    );
 
   } catch (err) {
 
     console.error(err);
 
-    alert("Login failed");
+    alert(
+      "Please allow popups and try again."
+    );
   }
 }
 
@@ -77,206 +104,298 @@ login();
 
 
 // ADD INFLUENCER
-window.addInfluencer = async function () {
+window.addInfluencer =
+  async function () {
 
-  const nameInput =
-    document.getElementById("name");
+    const nameInput =
+      document.getElementById("name");
 
-  const phoneInput =
-    document.getElementById("phone");
+    const phoneInput =
+      document.getElementById("phone");
 
-  const name =
-    nameInput.value.trim();
+    const name =
+      nameInput.value.trim();
 
-  const phone =
-    phoneInput.value.trim();
+    const phone =
+      phoneInput.value.trim();
 
-  if (!name || !phone) {
+    if (!name || !phone) {
 
-    alert("Enter influencer name and phone");
+      alert(
+        "Enter name and phone"
+      );
 
-    return;
-  }
+      return;
+    }
 
-  // BETTER UNIQUE ID
-  const refId =
-    crypto.randomUUID().slice(0, 8);
+    // UNIQUE REF
+    const refId =
+      crypto.randomUUID()
+      .slice(0, 8);
 
-  try {
+    try {
 
-    await addDoc(collection(db, "influencers"), {
+      await addDoc(
+        collection(db, "influencers"),
+        {
 
-      name,
-      phone,
-      ref: refId,
-      createdAt: new Date()
-    });
+          name,
+          phone,
 
-    const link =
-      `https://tracking-referral-app.vercel.app/?ref=${refId}`;
+          ref: refId,
 
-    // AUTO WHATSAPP SEND
-    const whatsappMessage =
-      `Hello ${name}, here is your referral link: ${link}`;
+          createdAt:
+            new Date()
+        }
+      );
 
-    const whatsappURL =
-      `https://wa.me/${phone}?text=${encodeURIComponent(whatsappMessage)}`;
+      const link =
+        `https://tracking-referral-app.vercel.app/?ref=${refId}`;
 
-    window.open(whatsappURL, "_blank");
+      // AUTO WHATSAPP SEND
+      const message =
+        `Hello ${name}, here is your referral link:\n\n${link}`;
 
-    nameInput.value = "";
-    phoneInput.value = "";
+      const whatsappURL =
+        `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
-  } catch (error) {
+      window.open(
+        whatsappURL,
+        "_blank"
+      );
 
-    console.error(error);
+      nameInput.value = "";
+      phoneInput.value = "";
 
-    alert("Error adding influencer");
-  }
-};
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Error adding influencer"
+      );
+    }
+  };
 
 
 // DELETE INFLUENCER
-window.deleteInfluencer = async function (id) {
+window.deleteInfluencer =
+  async function (id) {
 
-  const confirmDelete =
-    confirm("Delete influencer permanently?");
+    const confirmDelete =
+      confirm(
+        "Delete influencer permanently?"
+      );
 
-  if (!confirmDelete) return;
+    if (!confirmDelete) return;
 
-  try {
+    try {
 
-    await deleteDoc(doc(db, "influencers", id));
+      await deleteDoc(
+        doc(
+          db,
+          "influencers",
+          id
+        )
+      );
 
-    alert("Influencer deleted");
+      alert(
+        "Influencer deleted"
+      );
 
-  } catch (error) {
+    } catch (error) {
 
-    console.error(error);
+      console.error(error);
 
-    alert("Delete failed");
-  }
-};
+      alert("Delete failed");
+    }
+  };
 
 
-// LIVE DASHBOARD
+// LOAD LIVE
 function loadInfluencers() {
 
   onSnapshot(
+
     collection(db, "influencers"),
 
-    async (influencerSnap) => {
+    async (
+      influencerSnap
+    ) => {
 
       const clicksSnap =
-        await getDocs(collection(db, "clicks"));
+        await getDocs(
+          collection(db, "clicks")
+        );
 
       const list =
         document.getElementById("list");
 
       list.innerHTML = "";
 
-      // STATS
       document.getElementById(
         "totalInfluencers"
-      ).innerText = influencerSnap.size;
+      ).innerText =
+        influencerSnap.size;
 
       document.getElementById(
         "totalClicks"
-      ).innerText = clicksSnap.size;
+      ).innerText =
+        clicksSnap.size;
 
       // CLICK COUNTS
       const clickCounts = {};
 
-      clicksSnap.forEach((docSnap) => {
+      clicksSnap.forEach(
+        (docSnap) => {
 
-        const data = docSnap.data();
+          const data =
+            docSnap.data();
 
-        const ref = data.ref;
+          const ref =
+            data.ref;
 
-        if (!clickCounts[ref]) {
+          if (
+            !clickCounts[ref]
+          ) {
 
-          clickCounts[ref] = 0;
+            clickCounts[ref] = 0;
+          }
+
+          clickCounts[ref]++;
         }
-
-        clickCounts[ref]++;
-      });
-
-      // BUILD ARRAY
-      const influencers = [];
-
-      influencerSnap.forEach((docSnap) => {
-
-        const data = docSnap.data();
-
-        influencers.push({
-
-          id: docSnap.id,
-          ...data,
-          count: clickCounts[data.ref] || 0
-        });
-      });
-
-      // SORT BY HIGHEST CLICKS
-      influencers.sort(
-        (a, b) => b.count - a.count
       );
 
-      // RENDER
-      influencers.forEach((data) => {
+      // ARRAY
+      const influencers = [];
 
-        const link =
-          `https://tracking-referral-app.vercel.app/?ref=${data.ref}`;
+      influencerSnap.forEach(
+        (docSnap) => {
 
-        const li =
-          document.createElement("li");
+          const data =
+            docSnap.data();
 
-        li.style.marginBottom = "30px";
+          influencers.push({
 
-        li.innerHTML = `
+            id: docSnap.id,
 
-          <strong style="
-            font-size:22px;
-          ">
-            ${data.name}
-          </strong>
+            ...data,
 
-          <br><br>
+            count:
+              clickCounts[data.ref] || 0
+          });
+        }
+      );
 
-          <span style="
-            font-size:18px;
-            color:#22c55e;
-            font-weight:bold;
-          ">
-            ${data.count} clicks
-          </span>
+      // SORT
+      influencers.sort(
+        (a, b) =>
+          b.count - a.count
+      );
 
-          <br><br>
+      // SEARCH
+      const search =
+        document.getElementById(
+          "search"
+        ).value.toLowerCase();
 
-          <a href="${link}" target="_blank">
-            ${link}
-          </a>
+      const filtered =
+        influencers.filter(
+          (inf) =>
+            inf.name
+            .toLowerCase()
+            .includes(search)
+        );
 
-          <br><br>
+      // DISPLAY
+      filtered.forEach(
+        (data) => {
 
-          <button
-            onclick="deleteInfluencer('${data.id}')"
-            style="
-              background:red;
-              color:white;
-              border:none;
-              padding:10px 14px;
-              border-radius:8px;
-              cursor:pointer;
-            "
-          >
-            Delete Influencer
-          </button>
-        `;
+          const link =
+            `https://tracking-referral-app.vercel.app/?ref=${data.ref}`;
 
-        list.appendChild(li);
-      });
+          const li =
+            document.createElement("li");
+
+          li.innerHTML = `
+
+            <div class="top-row">
+
+              <strong class="name">
+                ${data.name}
+              </strong>
+
+              <span class="clicks">
+                ${data.count} clicks
+              </span>
+
+            </div>
+
+            <br>
+
+            <a
+              href="${link}"
+              target="_blank"
+            >
+              ${link}
+            </a>
+
+            <br><br>
+
+            <div class="btn-row">
+
+              <button
+                class="copy-btn"
+                onclick="navigator.clipboard.writeText('${link}')"
+              >
+                Copy Link
+              </button>
+
+              <button
+                class="delete-btn"
+                onclick="deleteInfluencer('${data.id}')"
+              >
+                Delete
+              </button>
+
+            </div>
+          `;
+
+          list.appendChild(li);
+        });
     }
   );
 }
 
+
+// LIVE SEARCH
+document
+.getElementById("search")
+.addEventListener(
+  "input",
+  loadInfluencers
+);
+
 loadInfluencers();
+
+// PRESS ENTER TO ADD INFLUENCER
+
+document
+  .getElementById("name")
+  .addEventListener("keypress", function (e) {
+
+    if (e.key === "Enter") {
+
+      addInfluencer();
+    }
+});
+
+document
+  .getElementById("phone")
+  .addEventListener("keypress", function (e) {
+
+    if (e.key === "Enter") {
+
+      addInfluencer();
+    }
+});
