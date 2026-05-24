@@ -3,29 +3,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import {
   getFirestore,
   collection,
-  addDoc
+  addDoc,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 // FIREBASE CONFIG
 const firebaseConfig = {
-
   apiKey: "AIzaSyA1GjZD0_BMnDKllhY0zDAeRA53AhQh8lM",
-
-  authDomain:
-    "tracking-system-32753.firebaseapp.com",
-
-  projectId:
-    "tracking-system-32753",
-
-  storageBucket:
-    "tracking-system-32753.firebasestorage.app",
-
-  messagingSenderId:
-    "250991296722",
-
-  appId:
-    "1:250991296722:web:7b5f743a9ea55717102d0b"
+  authDomain: "tracking-system-32753.firebaseapp.com",
+  projectId: "tracking-system-32753",
+  storageBucket: "tracking-system-32753.firebasestorage.app",
+  messagingSenderId: "250991296722",
+  appId: "1:250991296722:web:7b5f743a9ea55717102d0b"
 };
 
 
@@ -39,7 +29,32 @@ const db = getFirestore(app);
 const params =
   new URLSearchParams(window.location.search);
 
-const ref = params.get("ref");
+const ref =
+  params.get("ref");
+
+
+// FIND INFLUENCER NAME
+async function getInfluencerName(refId) {
+
+  const snap =
+    await getDocs(collection(db, "influencers"));
+
+  let influencerName =
+    "unknown influencer";
+
+  snap.forEach((doc) => {
+
+    const data = doc.data();
+
+    if (data.ref === refId) {
+
+      influencerName =
+        data.name;
+    }
+  });
+
+  return influencerName;
+}
 
 
 // TRACK CLICK
@@ -58,7 +73,8 @@ async function trackClick() {
   }
 
   // PREVENT MULTIPLE CLICKS
-  const clickKey = `clicked_${ref}`;
+  const clickKey =
+    `clicked_${ref}`;
 
   if (!localStorage.getItem(clickKey)) {
 
@@ -82,15 +98,19 @@ async function trackClick() {
     }
   }
 
+  // GET REAL INFLUENCER NAME
+  const influencerName =
+    await getInfluencerName(ref);
+
   // WHATSAPP MESSAGE
   const message =
-    `Hi, I found you through ${ref}`;
+    `Hi, I found you through ${influencerName}`;
 
-  // YOUR AGENCY NUMBER
+  // AGENCY NUMBER
   const whatsappURL =
     `https://wa.me/254701266490?text=${encodeURIComponent(message)}`;
 
-  // REDIRECT TO WHATSAPP
+  // REDIRECT
   setTimeout(() => {
 
     window.location.href =
