@@ -139,7 +139,7 @@ async function trackClick() {
     window.location.href =
       `https://wa.me/254701266490?text=${encodeURIComponent(message)}`;
 
-  }, 1500);
+  }, 300);
 }
 
 trackClick();
