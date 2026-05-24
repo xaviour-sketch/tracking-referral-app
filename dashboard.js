@@ -16,10 +16,10 @@ import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
-  signOut
+  signOut,
+  onAuthStateChanged
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 // FIREBASE CONFIG
 const firebaseConfig = {
@@ -42,6 +42,8 @@ const firebaseConfig = {
     "1:250991296722:web:7b5f743a9ea55717102d0b"
 };
 
+let allInfluencers = [];
+let dashboardLoaded = false;
 
 // INITIALIZE
 const app =
@@ -72,7 +74,8 @@ async function login() {
       result.user.email;
 
     const allowedEmails = [
-      "xaviourmuthee24@gmail.com"
+      "xaviourmuthee24@gmail.com",
+      "johnnjuguna79001@gmail.com"
     ];
 
     if (
@@ -100,7 +103,7 @@ async function login() {
   }
 }
 
-login();
+
 
 
 // ADD INFLUENCER
@@ -211,6 +214,126 @@ window.deleteInfluencer =
     }
   };
 
+    function renderInfluencers(dataArray) {
+
+  const list =
+    document.getElementById("list");
+
+  list.innerHTML = "";
+
+  const search =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase();
+
+  const filtered =
+    dataArray.filter(
+      (inf) =>
+        inf.name
+          .toLowerCase()
+          .includes(search)
+    );
+
+  filtered.forEach((data) => {
+
+    const link =
+      `https://tracking-referral-app.vercel.app/?ref=${data.ref}`;
+
+    const li =
+      document.createElement("li");
+
+      li.onclick = () =>
+        openPopup(
+          data.name,
+          data.phone,
+          link
+        );
+
+    li.innerHTML = `
+
+      <div class="top-row">
+
+        <strong class="name">
+          ${data.name}
+        </strong>
+
+        <span class="clicks">
+          ${data.count} clicks
+        </span>
+
+      </div>
+
+      <br>
+
+      <a href="${link}" target="_blank">
+        ${link}
+      </a>
+
+      <br><br>
+
+      <div class="btn-row">
+
+        <button
+          class="copy-btn"
+          onclick="event.stopPropagation(); navigator.clipboard.writeText('${link}')"
+        >
+          Copy Link
+        </button>
+
+        <button
+          class="delete-btn"
+          onclick="event.stopPropagation(); deleteInfluencer('${data.id}')"
+        >
+          Delete
+        </button>
+
+      </div>
+    `;
+
+    list.appendChild(li);
+  });
+}
+
+// OPEN POPUP
+window.openPopup = function (
+  name,
+  phone,
+  link
+) {
+
+  document
+    .getElementById("popup")
+    .classList
+    .remove("hidden");
+
+  document
+    .getElementById("popupName")
+    .innerText = name;
+
+  document
+    .getElementById("popupPhone")
+    .innerText = phone;
+
+  const popupLink =
+    document.getElementById("popupLink");
+
+  popupLink.href = link;
+
+  popupLink.innerText = link;
+};
+
+// CLOSE POPUP
+document
+  .getElementById("closePopup")
+  .addEventListener("click", () => {
+
+    document
+      .getElementById("popup")
+      .classList
+      .add("hidden");
+  });
+
 
 // LOAD LIVE
 function loadInfluencers() {
@@ -228,10 +351,7 @@ function loadInfluencers() {
           collection(db, "clicks")
         );
 
-      const list =
-        document.getElementById("list");
-
-      list.innerHTML = "";
+      
 
       document.getElementById(
         "totalInfluencers"
@@ -267,7 +387,7 @@ function loadInfluencers() {
       );
 
       // ARRAY
-      const influencers = [];
+      allInfluencers = [];
 
       influencerSnap.forEach(
         (docSnap) => {
@@ -275,8 +395,7 @@ function loadInfluencers() {
           const data =
             docSnap.data();
 
-          influencers.push({
-
+          allInfluencers.push({
             id: docSnap.id,
 
             ...data,
@@ -287,96 +406,17 @@ function loadInfluencers() {
         }
       );
 
-      // SORT
-      influencers.sort(
+           // SORT
+      allInfluencers.sort(
         (a, b) =>
           b.count - a.count
       );
 
-      // SEARCH
-      const search =
-        document.getElementById(
-          "search"
-        ).value.toLowerCase();
+      renderInfluencers(allInfluencers);
 
-      const filtered =
-        influencers.filter(
-          (inf) =>
-            inf.name
-            .toLowerCase()
-            .includes(search)
-        );
-
-      // DISPLAY
-      filtered.forEach(
-        (data) => {
-
-          const link =
-            `https://tracking-referral-app.vercel.app/?ref=${data.ref}`;
-
-          const li =
-            document.createElement("li");
-
-          li.innerHTML = `
-
-            <div class="top-row">
-
-              <strong class="name">
-                ${data.name}
-              </strong>
-
-              <span class="clicks">
-                ${data.count} clicks
-              </span>
-
-            </div>
-
-            <br>
-
-            <a
-              href="${link}"
-              target="_blank"
-            >
-              ${link}
-            </a>
-
-            <br><br>
-
-            <div class="btn-row">
-
-              <button
-                class="copy-btn"
-                onclick="navigator.clipboard.writeText('${link}')"
-              >
-                Copy Link
-              </button>
-
-              <button
-                class="delete-btn"
-                onclick="deleteInfluencer('${data.id}')"
-              >
-                Delete
-              </button>
-
-            </div>
-          `;
-
-          list.appendChild(li);
-        });
     }
   );
 }
-
-
-// LIVE SEARCH
-document
-.getElementById("search")
-.addEventListener(
-  "input",
-  loadInfluencers
-);
-
-loadInfluencers();
 
 // PRESS ENTER TO ADD INFLUENCER
 
@@ -397,5 +437,57 @@ document
     if (e.key === "Enter") {
 
       addInfluencer();
+    }
+});
+
+document
+  .getElementById("loginBtn")
+  .addEventListener("click", login);
+
+document
+  .getElementById("search")
+  .addEventListener("input", () => {
+
+    renderInfluencers(allInfluencers);
+});
+
+onAuthStateChanged(auth, (user) => {
+
+  const formCard =
+    document.querySelector(".form-card");
+
+  if (user) {
+
+    console.log("User authenticated");
+
+    formCard.style.display = "block";
+
+
+
+      if (!dashboardLoaded) {
+
+    loadInfluencers();
+
+    dashboardLoaded = true;
+    }
+
+  } else {
+
+    console.log("No user signed in");
+
+    formCard.style.display = "none";
+  }
+});
+
+document
+  .getElementById("popup")
+  .addEventListener("click", (e) => {
+
+    if (e.target.id === "popup") {
+
+      document
+        .getElementById("popup")
+        .classList
+        .add("hidden");
     }
 });

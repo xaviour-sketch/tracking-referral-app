@@ -34,6 +34,10 @@
       Influencer Dashboard
     </h1>
 
+    <button id="loginBtn">
+        Login with Google
+    </button>
+
     <!-- STATS -->
     <div class="stats-container">
 
@@ -93,6 +97,30 @@
   </div>
 
   <script type="module" src="dashboard.js"></script>
+
+  <!-- POPUP MODAL -->
+  <div id="popup" class="popup hidden">
+
+    <div class="popup-content">
+
+      <span id="closePopup" class="close-btn">
+        &times;
+      </span>
+
+      <h2 id="popupName"></h2>
+
+      <p id="popupPhone"></p>
+
+      <a
+        id="popupLink"
+        target="_blank"
+      >
+        Open Referral Link
+      </a>
+
+    </div>
+
+</div>
 
 </body>
 

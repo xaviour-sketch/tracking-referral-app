@@ -137,7 +137,7 @@ async function trackClick() {
       `Hi, I found you through ${ref}`;
 
     window.location.href =
-      `https://wa.me/254701266490?text=${encodeURIComponent(message)}`;
+      `https://wa.me/254717248835?text=${encodeURIComponent(message)}`;
 
   }, 1500);
 }
