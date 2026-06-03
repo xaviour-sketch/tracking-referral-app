@@ -35,28 +35,6 @@ const influencerName =
   params.get("name") || "Unknown Influencer";
 
 
-// FIND INFLUENCER NAME
-async function getInfluencerName(refId) {
-
-  const snap =
-    await getDocs(collection(db, "influencers"));
-
-  let influencerName =
-    "unknown influencer";
-
-  snap.forEach((doc) => {
-
-    const data = doc.data();
-
-    if (data.ref === refId) {
-
-      influencerName =
-        data.name;
-    }
-  });
-
-  return influencerName;
-}
 
 
 // TRACK CLICK
@@ -99,9 +77,7 @@ async function trackClick() {
     }
   }
 
-  // GET REAL INFLUENCER NAME
-  const influencerName =
-    await getInfluencerName(ref);
+
 
   // WHATSAPP MESSAGE
   const message =
