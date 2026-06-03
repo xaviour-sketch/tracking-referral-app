@@ -153,7 +153,7 @@ window.addInfluencer =
       );
 
       const link =
-        `https://tracking-referral-app.vercel.app/?ref=${refId}`;
+  `https://tracking-referral-app.vercel.app/?ref=${refId}&name=${encodeURIComponent(name)}`;
 
       // AUTO WHATSAPP SEND
       const message =
@@ -238,7 +238,7 @@ window.deleteInfluencer =
   filtered.forEach((data) => {
 
     const link =
-      `https://tracking-referral-app.vercel.app/?ref=${data.ref}`;
+  `https://tracking-referral-app.vercel.app/?ref=${data.ref}&name=${encodeURIComponent(data.name)}`;
 
     const li =
       document.createElement("li");

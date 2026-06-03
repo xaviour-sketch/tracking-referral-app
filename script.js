@@ -1,3 +1,4 @@
+script.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
@@ -29,8 +30,9 @@ const db = getFirestore(app);
 const params =
   new URLSearchParams(window.location.search);
 
-const ref =
-  params.get("ref");
+const ref = params.get("ref");
+const influencerName =
+  params.get("name") || "Unknown Influencer";
 
 
 // FIND INFLUENCER NAME
@@ -63,11 +65,10 @@ async function trackClick() {
   // INVALID LINK
   if (!ref) {
 
-    document.body.innerHTML = `
-      <div class="redirect-box">
+    document.body.innerHTML = 
+      `<div class="redirect-box">
         <h1>Invalid Referral Link</h1>
-      </div>
-    `;
+      </div>`;
 
     return;
   }
@@ -120,3 +121,4 @@ async function trackClick() {
 }
 
 trackClick();
+
