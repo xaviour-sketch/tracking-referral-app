@@ -84,7 +84,7 @@ async function trackClick() {
 
   // AGENCY NUMBER
   const whatsappURL =
-    `https://wa.me/254701266490?text=${encodeURIComponent(message)}`;
+    `https://wa.me/254758541230?text=${encodeURIComponent(message)}`;
 
   // REDIRECT
   setTimeout(() => {
